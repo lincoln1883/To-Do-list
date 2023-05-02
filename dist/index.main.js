@@ -6,7 +6,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-(self["webpackChunkto_do_list"] = self["webpackChunkto_do_list"] || []).push([["main"],{
+(self["webpackChunkto_do_list"] = self["webpackChunkto_do_list"] || []).push([["index"],{
 
 /***/ "./src/index.js":
 /*!**********************!*\
@@ -14,7 +14,7 @@
   \**********************/
 /***/ (() => {
 
-eval("\n\n//# sourceURL=webpack://to-do-list/./src/index.js?");
+eval("const ul = document.querySelector('todo-list');\n\nlet task = [\n\t{\n\t\tid: 1,\n\t\tname: 'Learn React',\n\t\tdone: false,\n\t},\n\t{\n\t\tid: 2,\n\t\tname: 'Learn Node',\n\t\tdone: false,\n\t},\n\t{\n\t\tid: 1,\n\t\tname: 'Learn Sql',\n\t\tdone: false,\n\t},\n];\n\nconst getTask = () => {\n\ttask.forEach((task) => {\n\t\tlet li = document.createElement('li');\n\t\tli.textContent = task.name;\n\t\tconsole.log(task.name);\n\t});\n\tul.appendChild(li);\n};\n\ngetTask();\n\n\n//# sourceURL=webpack://to-do-list/./src/index.js?");
 
 /***/ })
 
