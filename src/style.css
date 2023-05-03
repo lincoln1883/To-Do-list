@@ -39,6 +39,11 @@ main {
   padding: 5px 0;
 }
 
+form {
+  width: 100%;
+  background-color: #fff;
+}
+
 .todo-input {
   padding: 10px 20px;
   border-style: none;

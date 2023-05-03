@@ -5,33 +5,35 @@ import returnIcon from './assets/return.svg';
 
 // Create a function to display the task list
 
-let task = JSON.parse(localStorage.getItem('tasks')) || [
-	{
-		id: 1,
-		name: 'Learn React',
-		completed: false,
-	},
-	{
-		id: 2,
-		name: 'Learn Node',
-		completed: false,
-	},
-	{
-		id: 3,
-		name: 'Learn SQL',
-		completed: false,
-	},
-	{
-		id: 4,
-		name: 'Learn Express',
-		completed: true,
-	},
-	{
-		id: 5,
-		name: 'Mongo DB',
-		completed: true,
-	},
-];
+let task =
+	JSON.parse(localStorage.getItem('tasks')) ||
+	[
+		// {
+		// 	id: 1,
+		// 	name: 'Learn React',
+		// 	completed: false,
+		// },
+		// {
+		// 	id: 2,
+		// 	name: 'Learn Node',
+		// 	completed: false,
+		// },
+		// {
+		// 	id: 3,
+		// 	name: 'Learn SQL',
+		// 	completed: false,
+		// },
+		// {
+		// 	id: 4,
+		// 	name: 'Learn Express',
+		// 	completed: true,
+		// },
+		// {
+		// 	id: 5,
+		// 	name: 'Mongo DB',
+		// 	completed: true,
+		// },
+	];
 
 const todoList = document.querySelector('.todo-list');
 const textContainer = document.querySelector('.todo-text__container');
@@ -75,6 +77,32 @@ const displayTask = () => {
 	localStorage.setItem('tasks', JSON.stringify(task));
 };
 
+// function for adding a new task
+const addTask = (name) => {
+	// const taskName = document.querySelector('.todo-input');
+	let newTask = {
+		id: task.length + 1,
+		name: name,
+		completed: false,
+	};
+
+	task.push(newTask);
+	displayTask();
+};
+
 window.onload = () => {
 	displayTask();
+
+	//function for submitting a new task
+	const todoForm = document.querySelector('form');
+
+	todoForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const todoInput = document.querySelector('.todo-input').value;
+		const inputValue = todoInput;
+		if (inputValue !== '') {
+			addTask(inputValue);
+			inputValue.value = '';
+		}
+	});
 };
