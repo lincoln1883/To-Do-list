@@ -1,3 +1,7 @@
+import './style.css';
+import dots from './assets/dots.svg';
+
+// Create a function to display the task list
 const todoList = document.querySelector('.todo-list');
 
 let task = [
@@ -39,10 +43,14 @@ const displayTask = () => {
 		let input = document.createElement('input');
 		input.setAttribute('type', 'checkbox');
 		input.checked = task.completed;
+		let icon = document.createElement('img');
+		icon.classList.add('option-icon');
+		icon.setAttribute('src', dots);
 		let span = document.createElement('span');
 		span.innerText = task.name;
 		div.appendChild(input);
 		div.appendChild(span);
+		div.appendChild(icon);
 		taskItem.appendChild(div);
 		todoList.appendChild(taskItem);
 	});
