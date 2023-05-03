@@ -5,35 +5,7 @@ import returnIcon from './assets/return.svg';
 
 // Create a function to display the task list
 
-let task =
-	JSON.parse(localStorage.getItem('tasks')) ||
-	[
-		// {
-		// 	id: 1,
-		// 	name: 'Learn React',
-		// 	completed: false,
-		// },
-		// {
-		// 	id: 2,
-		// 	name: 'Learn Node',
-		// 	completed: false,
-		// },
-		// {
-		// 	id: 3,
-		// 	name: 'Learn SQL',
-		// 	completed: false,
-		// },
-		// {
-		// 	id: 4,
-		// 	name: 'Learn Express',
-		// 	completed: true,
-		// },
-		// {
-		// 	id: 5,
-		// 	name: 'Mongo DB',
-		// 	completed: true,
-		// },
-	];
+let task = JSON.parse(localStorage.getItem('tasks')) || [];
 
 const todoList = document.querySelector('.todo-list');
 const textContainer = document.querySelector('.todo-text__container');
@@ -42,11 +14,11 @@ image.classList.add('refresh-icon');
 image.setAttribute('src', fresh);
 textContainer.appendChild(image);
 
-const todoContainer = document.querySelector('.todo-container');
+const form = document.querySelector('#input-form');
 const returnImg = document.createElement('img');
 returnImg.classList.add('return-icon');
 returnImg.setAttribute('src', returnIcon);
-todoContainer.appendChild(returnImg);
+form.appendChild(returnImg);
 
 // function for displaying the list of tasks
 const displayTask = () => {
@@ -77,9 +49,13 @@ const displayTask = () => {
 	localStorage.setItem('tasks', JSON.stringify(task));
 };
 
+const saveTasks = () => {
+	localStorage.setItem('tasks', JSON.stringify(task));
+	displayTask();
+};
+
 // function for adding a new task
 const addTask = (name) => {
-	// const taskName = document.querySelector('.todo-input');
 	let newTask = {
 		id: task.length + 1,
 		name: name,
@@ -87,22 +63,29 @@ const addTask = (name) => {
 	};
 
 	task.push(newTask);
-	displayTask();
+	saveTasks();
 };
+
+const removeTask = (id) => {
+	const taskIndex = task.findIndex((task) => task.id === id);
+	task.splice(taskIndex, 1);
+	task.forEach((task, id) => {
+		task.id = id;
+	});
+	saveTasks();
+};
+
+const todoInput = document.querySelector('#todo-input');
+
+form.addEventListener('submit', (e) => {
+	e.preventDefault();
+	let inputValue = todoInput.value.trim();
+	console.log(inputValue);
+	if (inputValue !== '') {
+		addTask(inputValue);
+	}
+});
 
 window.onload = () => {
 	displayTask();
-
-	//function for submitting a new task
-	const todoForm = document.querySelector('form');
-
-	todoForm.addEventListener('submit', (e) => {
-		e.preventDefault();
-		const todoInput = document.querySelector('.todo-input').value;
-		const inputValue = todoInput;
-		if (inputValue !== '') {
-			addTask(inputValue);
-			inputValue.value = '';
-		}
-	});
 };
