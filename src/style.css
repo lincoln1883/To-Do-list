@@ -14,7 +14,7 @@ main {
   -webkit-box-shadow: 3px 10px 53px -17px rgba(0, 0, 0, 0.53);
   -moz-box-shadow: 3px 10px 53px -17px rgba(0, 0, 0, 0.53);
   box-shadow: 3px 10px 53px -17px rgba(0, 0, 0, 0.53);
-  ;
+  
 }
 
 .todo-text__container {
@@ -80,7 +80,7 @@ main {
   right: 20px;
   width: 15px;
   color: transparent;
-  cursor: all-scroll
+  cursor: all-scroll;
 }
 
 button {
