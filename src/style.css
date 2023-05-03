@@ -17,6 +17,18 @@ main {
   ;
 }
 
+.todo-text__container {
+  position: relative;
+}
+
+.refresh-icon {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 15px;
+  cursor: pointer;
+}
+
 .todo-title {
   padding: 0 10px;
 }
@@ -25,7 +37,7 @@ main {
   background-color: rgb(237 237 237);
   display: flex;
   flex-direction: column;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .todo-input {
@@ -37,7 +49,7 @@ main {
   display: flex;
   flex-direction: column;
   list-style: none;
-  padding: 10px 0;
+  padding: 4px 0;
   margin-top: 0;
   gap: 4px;
 }
@@ -58,6 +70,7 @@ main {
   right: 30px;
   width: 15px;
   color: transparent;
+  cursor: all-scroll
 }
 
 button {

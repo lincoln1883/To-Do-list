@@ -8,9 +8,20 @@
 	<script defer src="runtime.js"></script><script defer src="index.js"></script></head>
 	<body>
 		<main>
-			<p class="todo-title">Today's to do's</p>
+			<div class="todo-text__container">
+				<p class="todo-title">Today's To Do</p>
+			</div>
+
 			<div class="todo-container">
+				<input
+					class="todo-input"
+					type="text"
+					name="todo"
+					id="todo-input"
+					placeholder="Add to your list..."
+					required />
 				<ul class="todo-list"></ul>
+				<button type="button">Clear all completed</button>
 			</div>
 		</main>
 	</body>

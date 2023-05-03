@@ -1,8 +1,8 @@
 import './style.css';
 import dots from './assets/dots.svg';
+import fresh from './assets/refresh.svg';
 
 // Create a function to display the task list
-const todoList = document.querySelector('.todo-list');
 
 let task = [
 	{
@@ -31,6 +31,13 @@ let task = [
 		completed: true,
 	},
 ];
+
+const todoList = document.querySelector('.todo-list');
+const textContainer = document.querySelector('.todo-text__container');
+const image = document.createElement('img');
+image.classList.add('refresh-icon');
+image.setAttribute('src', fresh);
+textContainer.appendChild(image);
 
 const displayTask = () => {
 	todoList.innerHTML = '';
