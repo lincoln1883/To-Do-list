@@ -43,6 +43,15 @@ main {
 .todo-input {
   padding: 10px 20px;
   border-style: none;
+  position: relative;
+}
+
+.return-icon {
+  position: absolute;
+  right: 20px;
+  top: 70px;
+  width: 15px;
+  cursor: pointer;
 }
 
 .todo-list {
@@ -67,7 +76,7 @@ main {
 
 .option-icon {
   position: absolute;
-  right: 30px;
+  right: 20px;
   width: 15px;
   color: transparent;
   cursor: all-scroll
