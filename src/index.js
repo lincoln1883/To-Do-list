@@ -2,10 +2,11 @@ import './style.css';
 import dots from './assets/dots.svg';
 import fresh from './assets/refresh.svg';
 import returnIcon from './assets/return.svg';
+import addTask from './addTask.js';
+import removeTask from './removeTask.js';
+import editTask from './editTask.js';
 
-// Create a function to display the task list
-
-//let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 const todoList = document.querySelector('.todo-list');
 const textContainer = document.querySelector('.todo-text__container');
@@ -18,10 +19,12 @@ const deleteBtn = document.querySelector('.delete-btn');
 
 const form = document.querySelector('#input-form');
 const taskInput = document.querySelector('#todo-input');
+const submitBtn = document.querySelector('.submit-btn');
+
 const returnImg = document.createElement('img');
 returnImg.classList.add('return-icon');
 returnImg.setAttribute('src', returnIcon);
-form.appendChild(returnImg);
+submitBtn.appendChild(returnImg);
 
 // function for displaying the list of tasks
 const displayTask = () => {
@@ -47,15 +50,15 @@ const displayTask = () => {
 			saveTasks();
 			displayTask();
 		});
-
 		const taskDots = taskItem.querySelector('.option-icon');
 		taskDots.addEventListener('click', () => {
 			const taskId = task.id;
 			const taskIndex = tasks.findIndex((task) => task.id === taskId);
-			const newTaskName = document.querySelector('#todo-input');
+			//const newTaskName = document.querySelector('#todo-input');
 			taskInput.value = tasks[taskIndex].name;
 			taskInput.dataset.taskId = taskId;
-			newTaskName.focus();
+			taskInput.focus();
+			//newTaskName.focus();
 		});
 	});
 };
@@ -65,43 +68,17 @@ const saveTasks = () => {
 	displayTask();
 };
 
-// function for adding a new task
-// const addTask = (e) => {
-// 	e.preventDefault();
-// 	const taskInput = document.querySelector('#todo-input');
-// 	const taskName = taskInput.value.trim();
-// 	if (!taskName) return;
-
-// 	const existingTask = taskInput.dataset.taskId;
-// 	if (existingTask) {
-// 		const taskIndex = tasks.findIndex(
-// 			(task) => task.id === parseInt(existingTask)
-// 		);
-// 		tasks[taskIndex].name = taskName;
-// 		taskInput.dataset.taskId = '';
-// 	} else {
-// 		let newTask = {
-// 			id: tasks.length + 1,
-// 			name: taskName,
-// 			completed: false,
-// 			index: tasks.length,
-// 		};
-
-// 		tasks.push(newTask);
-// 	}
-// 	saveTasks();
-// 	form.reset();
-// 	displayTask();
-// };
-
-const removeTask = (id) => {
-	console.log('removeTask called with id', id);
-	tasks = tasks.filter((task) => task.id !== id);
-	console.log('tasks after filter', tasks);
-	saveTasks();
-};
-
 form.addEventListener('submit', addTask);
+
+submitBtn.addEventListener('click', (e) => {
+	e.preventDefault();
+	const taskName = taskInput.value;
+	const existingTask = taskInput.dataset.taskId;
+	tasks = addTask(tasks, taskName, existingTask);
+	saveTasks();
+	taskInput.value = '';
+	taskInput.dataset.taskId = '';
+});
 
 deleteBtn.addEventListener('click', () => {
 	const checkedTasks = document.querySelectorAll(
@@ -110,9 +87,19 @@ deleteBtn.addEventListener('click', () => {
 	checkedTasks.forEach((checkbox) => {
 		const taskItem = checkbox.closest('li');
 		const taskId = parseInt(checkbox.id.split('-')[1]);
-		removeTask(taskId);
+		tasks = removeTask(taskId, tasks);
 		taskItem.remove();
 	});
+	saveTasks();
+});
+
+const editInput = document.querySelector('#todo-input');
+
+editInput.addEventListener('click', () => {
+	const taskId = editInput.dataset.taskId;
+	const taskName = editInput.value;
+	tasks = editTask(tasks, taskId, taskName);
+	saveTasks();
 });
 
 window.onload = () => {

@@ -49,6 +49,7 @@ form {
   border-style: none;
   position: relative;
   font-style: italic;
+  width: 80%;
 }
 
 .return-icon {
@@ -92,4 +93,9 @@ button {
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+.submit-btn {
+  color: #fff;
+  width: auto;
 }

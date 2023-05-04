@@ -1,3 +1,8 @@
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-export default tasks;
+// const saveTasks = () => {
+// 	localStorage.setItem('tasks', JSON.stringify(tasks));
+// 	displayTask();
+// };
+
+//export { tasks, saveTasks };
