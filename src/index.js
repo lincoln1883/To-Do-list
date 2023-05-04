@@ -27,7 +27,6 @@ returnImg.setAttribute('src', returnIcon);
 submitBtn.appendChild(returnImg);
 
 // function for displaying the list of tasks
-
 const saveTasks = () => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 };
@@ -73,6 +72,7 @@ submitBtn.addEventListener('click', (e) => {
   const taskName = taskInput.value;
   const existingTask = taskInput.dataset.taskId;
   tasks = addTask(tasks, taskName, existingTask);
+  displayTask();
   saveTasks();
   taskInput.value = '';
   taskInput.dataset.taskId = '';
@@ -93,13 +93,15 @@ deleteBtn.addEventListener('click', () => {
 
 const editInput = document.querySelector('#todo-input');
 
-editInput.addEventListener('click', () => {
+editInput.addEventListener('change', () => {
   const { taskId } = editInput.dataset;
   const taskName = editInput.value;
   tasks = editTask(tasks, taskId, taskName);
   saveTasks();
+  displayTask();
 });
 
 window.onload = () => {
   displayTask();
+  saveTasks();
 };
