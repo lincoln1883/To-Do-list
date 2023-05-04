@@ -5,7 +5,7 @@ import returnIcon from './assets/return.svg';
 
 // Create a function to display the task list
 
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+//let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 const todoList = document.querySelector('.todo-list');
 const textContainer = document.querySelector('.todo-text__container');
