@@ -5,7 +5,7 @@ import returnIcon from './assets/return.svg';
 
 // Create a function to display the task list
 
-let task = JSON.parse(localStorage.getItem('tasks')) || [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 const todoList = document.querySelector('.todo-list');
 const textContainer = document.querySelector('.todo-text__container');
@@ -14,7 +14,10 @@ image.classList.add('refresh-icon');
 image.setAttribute('src', fresh);
 textContainer.appendChild(image);
 
+const deleteBtn = document.querySelector('.delete-btn');
+
 const form = document.querySelector('#input-form');
+const taskInput = document.querySelector('#todo-input');
 const returnImg = document.createElement('img');
 returnImg.classList.add('return-icon');
 returnImg.setAttribute('src', returnIcon);
@@ -23,67 +26,93 @@ form.appendChild(returnImg);
 // function for displaying the list of tasks
 const displayTask = () => {
 	todoList.innerHTML = '';
-	task.sort((a, b) => a.id - b.id);
+	tasks.sort((a, b) => a.id - b.id);
 
-	task.forEach((task, id) => {
+	tasks.forEach((task) => {
 		const taskItem = document.createElement('li');
-		const div = document.createElement('div');
-		div.classList.add('task');
-		const input = document.createElement('input');
-		input.setAttribute('type', 'checkbox');
-		input.checked = task.completed;
-		const icon = document.createElement('img');
-		icon.classList.add('option-icon');
-		icon.setAttribute('src', dots);
-		const span = document.createElement('span');
-		span.innerText = task.name;
-		div.appendChild(input);
-		div.appendChild(span);
-		div.appendChild(icon);
-		taskItem.appendChild(div);
+		taskItem.innerHTML = `
+    <div class="task">
+      <input type="checkbox" id="task-${task.id}" ${
+			task.completed ? 'checked' : ''
+		}>
+      <label class="task-label" for="task-${task.id}">${task.name}</label>
+      <img class="option-icon" src=${dots}>
+      </div>
+      `;
 		todoList.appendChild(taskItem);
 
-		task.id = id + 1;
-	});
+		const taskLabel = taskItem.querySelector('.task-label');
+		taskLabel.addEventListener('click', () => {
+			task.completed = !task.completed;
+			saveTasks();
+			displayTask();
+		});
 
-	localStorage.setItem('tasks', JSON.stringify(task));
+		const taskDots = taskItem.querySelector('.option-icon');
+		taskDots.addEventListener('click', () => {
+			const taskId = task.id;
+			const taskIndex = tasks.findIndex((task) => task.id === taskId);
+			const newTaskName = document.querySelector('#todo-input');
+			taskInput.value = tasks[taskIndex].name;
+			taskInput.dataset.taskId = taskId;
+			newTaskName.focus();
+		});
+	});
 };
 
 const saveTasks = () => {
-	localStorage.setItem('tasks', JSON.stringify(task));
+	localStorage.setItem('tasks', JSON.stringify(tasks));
 	displayTask();
 };
 
 // function for adding a new task
-const addTask = (name) => {
-	let newTask = {
-		id: task.length + 1,
-		name: name,
-		completed: false,
-	};
+const addTask = (e) => {
+	e.preventDefault();
+	const taskInput = document.querySelector('#todo-input');
+	const taskName = taskInput.value.trim();
+	if (!taskName) return;
 
-	task.push(newTask);
+	const existingTask = taskInput.dataset.taskId;
+	if (existingTask) {
+		const taskIndex = tasks.findIndex(
+			(task) => task.id === parseInt(existingTask)
+		);
+		tasks[taskIndex].name = taskName;
+		taskInput.dataset.taskId = '';
+	} else {
+		let newTask = {
+			id: tasks.length + 1,
+			name: taskName,
+			completed: false,
+			index: tasks.length,
+		};
+
+		tasks.push(newTask);
+	}
 	saveTasks();
+	form.reset();
+	displayTask();
 };
 
 const removeTask = (id) => {
-	const taskIndex = task.findIndex((task) => task.id === id);
-	task.splice(taskIndex, 1);
-	task.forEach((task, id) => {
-		task.id = id;
-	});
+	console.log('removeTask called with id', id);
+	tasks = tasks.filter((task) => task.id !== id);
+	console.log('tasks after filter', tasks);
 	saveTasks();
 };
 
-const todoInput = document.querySelector('#todo-input');
+form.addEventListener('submit', addTask);
 
-form.addEventListener('submit', (e) => {
-	e.preventDefault();
-	let inputValue = todoInput.value.trim();
-	console.log(inputValue);
-	if (inputValue !== '') {
-		addTask(inputValue);
-	}
+deleteBtn.addEventListener('click', () => {
+	const checkedTasks = document.querySelectorAll(
+		'input[type="checkbox"]:checked'
+	);
+	checkedTasks.forEach((checkbox) => {
+		const taskItem = checkbox.closest('li');
+		const taskId = parseInt(checkbox.id.split('-')[1]);
+		removeTask(taskId);
+		taskItem.remove();
+	});
 });
 
 window.onload = () => {
