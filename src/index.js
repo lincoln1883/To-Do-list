@@ -27,84 +27,84 @@ submitBtn.appendChild(returnImg);
 
 // function for displaying the list of tasks
 const saveTasks = () => {
-	localStorage.setItem('tasks', JSON.stringify(tasks));
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 const displayTask = () => {
-	todoList.innerHTML = '';
-	if (!tasks) {
-		tasks = [];
-	}
+  todoList.innerHTML = '';
+  if (!tasks) {
+    tasks = [];
+  }
 
-	tasks.forEach((task, index) => {
-		task.index = index + 1;
+  tasks.forEach((task, index) => {
+    task.index = index + 1;
 
-		const taskItem = document.createElement('li');
-		taskItem.innerHTML = `
+    const taskItem = document.createElement('li');
+    taskItem.innerHTML = `
     <div class="task">
       <input type="checkbox" id="task-${task.index}" ${
-			task.completed ? 'checked' : ''
-		}>
+  task.completed ? 'checked' : ''
+}>
       <label class="task-label" for="task-${task.index}">${task.name}</label>
       <img class="option-icon" src=${dots}>
       </div>
       `;
-		todoList.appendChild(taskItem);
+    todoList.appendChild(taskItem);
 
-		const taskLabel = taskItem.querySelector('.task-label');
-		taskLabel.addEventListener('click', () => {
-			task.completed = !task.completed;
-			saveTasks();
-			displayTask();
-		});
-		const taskDots = taskItem.querySelector('.option-icon');
-		taskDots.addEventListener('click', () => {
-			const taskId = task.index;
-			const taskIndex = tasks.findIndex((task) => task.index === taskId);
+    const taskLabel = taskItem.querySelector('.task-label');
+    taskLabel.addEventListener('click', () => {
+      task.completed = !task.completed;
+      saveTasks();
+      displayTask();
+    });
+    const taskDots = taskItem.querySelector('.option-icon');
+    taskDots.addEventListener('click', () => {
+      const taskId = task.index;
+      const taskIndex = tasks.findIndex((task) => task.index === taskId);
 
-			const newInput = document.createElement('input');
-			newInput.classList.add('edit-input');
-			newInput.setAttribute('type', 'text');
-			newInput.value = tasks[taskIndex].name;
+      const newInput = document.createElement('input');
+      newInput.classList.add('edit-input');
+      newInput.setAttribute('type', 'text');
+      newInput.value = tasks[taskIndex].name;
 
-			const trashIcon = document.createElement('img');
-			trashIcon.classList.add('trash-icon');
-			trashIcon.setAttribute('src', trash);
+      const trashIcon = document.createElement('img');
+      trashIcon.classList.add('trash-icon');
+      trashIcon.setAttribute('src', trash);
 
-			taskLabel.replaceWith(newInput);
-			taskDots.replaceWith(trashIcon);
+      taskLabel.replaceWith(newInput);
+      taskDots.replaceWith(trashIcon);
 
-			newInput.focus();
+      newInput.focus();
 
-			newInput.addEventListener('change', () => {
-				const taskName = newInput.value;
-				tasks = editTask(tasks, taskId, taskName);
-				saveTasks();
-				displayTask();
-			});
+      newInput.addEventListener('change', () => {
+        const taskName = newInput.value;
+        tasks = editTask(tasks, taskId, taskName);
+        saveTasks();
+        displayTask();
+      });
 
-			trashIcon.addEventListener('click', () => {
-				removeTask(taskId, tasks);
-				saveTasks();
-				displayTask();
-			});
-		});
-	});
+      trashIcon.addEventListener('click', () => {
+        removeTask(taskId, tasks);
+        saveTasks();
+        displayTask();
+      });
+    });
+  });
 };
 
 form.addEventListener('submit', addTask);
 
 submitBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	const taskName = taskInput.value;
-	const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
-	tasks = addTask(tasks, taskName, existingTaskId);
-	displayTask();
-	saveTasks();
-	taskInput.value = '';
-	taskInput.dataset.taskId = '';
+  e.preventDefault();
+  const taskName = taskInput.value;
+  const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
+  tasks = addTask(tasks, taskName, existingTaskId);
+  displayTask();
+  saveTasks();
+  taskInput.value = '';
+  taskInput.dataset.taskId = '';
 });
 
 window.onload = () => {
-	displayTask();
+  displayTask();
 };
