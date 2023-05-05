@@ -44,12 +44,14 @@ form {
   background-color: #fff;
 }
 
-.todo-input {
+.todo-input,
+.edit-input {
   padding: 10px 20px;
   border-style: none;
   position: relative;
   font-style: italic;
   width: 80%;
+  outline: none;
 }
 
 .return-icon {
@@ -58,6 +60,15 @@ form {
   top: 70px;
   width: 15px;
   cursor: pointer;
+}
+
+.edit-input {
+  background-color: bisque;
+  width: 100%;
+}
+
+.trash-icon {
+  width: 30px;
 }
 
 .todo-list {
@@ -80,7 +91,8 @@ form {
   padding: 5px 10px;
 }
 
-.option-icon {
+.option-icon,
+.trash-icon {
   position: absolute;
   right: 20px;
   width: 15px;

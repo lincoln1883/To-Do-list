@@ -2,6 +2,7 @@ import './style.css';
 import dots from './assets/dots.svg';
 import fresh from './assets/refresh.svg';
 import returnIcon from './assets/return.svg';
+import trash from './assets/trash.svg';
 import addTask from './addTask.js';
 import removeTask from './removeTask.js';
 import editTask from './editTask.js';
@@ -15,7 +16,7 @@ image.classList.add('refresh-icon');
 image.setAttribute('src', fresh);
 textContainer.appendChild(image);
 
-const deleteBtn = document.querySelector('.delete-btn');
+// const deleteBtn = document.querySelector('.delete-btn');
 
 const form = document.querySelector('#input-form');
 const taskInput = document.querySelector('#todo-input');
@@ -33,9 +34,13 @@ const saveTasks = () => {
 
 const displayTask = () => {
   todoList.innerHTML = '';
-  tasks.sort((a, b) => a.id - b.id);
+  if (!tasks) {
+    tasks = [];
+  }
 
-  tasks.forEach((task) => {
+  tasks.forEach((task, index) => {
+    task.id = index + 1;
+
     const taskItem = document.createElement('li');
     taskItem.innerHTML = `
     <div class="task">
@@ -58,9 +63,33 @@ const displayTask = () => {
     taskDots.addEventListener('click', () => {
       const taskId = task.id;
       const taskIndex = tasks.findIndex((task) => task.id === taskId);
-      taskInput.value = tasks[taskIndex].name;
-      taskInput.dataset.taskId = taskId;
-      taskInput.focus();
+
+      const newInput = document.createElement('input');
+      newInput.classList.add('edit-input');
+      newInput.setAttribute('type', 'text');
+      newInput.value = tasks[taskIndex].name;
+
+      const trashIcon = document.createElement('img');
+      trashIcon.classList.add('trash-icon');
+      trashIcon.setAttribute('src', trash);
+
+      taskLabel.replaceWith(newInput);
+      taskDots.replaceWith(trashIcon);
+
+      newInput.focus();
+
+      newInput.addEventListener('change', () => {
+        const taskName = newInput.value;
+        tasks = editTask(tasks, taskId, taskName);
+        saveTasks();
+        displayTask();
+      });
+
+      trashIcon.addEventListener('click', () => {
+        removeTask(taskId, tasks);
+        saveTasks();
+        displayTask();
+      });
     });
   });
 };
@@ -70,38 +99,14 @@ form.addEventListener('submit', addTask);
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
   const taskName = taskInput.value;
-  const existingTask = taskInput.dataset.taskId;
-  tasks = addTask(tasks, taskName, existingTask);
+  const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
+  tasks = addTask(tasks, taskName, existingTaskId);
   displayTask();
   saveTasks();
   taskInput.value = '';
   taskInput.dataset.taskId = '';
 });
 
-deleteBtn.addEventListener('click', () => {
-  const checkedTasks = document.querySelectorAll(
-    'input[type="checkbox"]:checked',
-  );
-  checkedTasks.forEach((checkbox) => {
-    const taskItem = checkbox.closest('li');
-    const taskId = parseInt(checkbox.id.split('-')[1], 10);
-    tasks = removeTask(taskId, tasks);
-    taskItem.remove();
-  });
-  saveTasks();
-});
-
-const editInput = document.querySelector('#todo-input');
-
-editInput.addEventListener('change', () => {
-  const { taskId } = editInput.dataset;
-  const taskName = editInput.value;
-  tasks = editTask(tasks, taskId, taskName);
-  saveTasks();
-  displayTask();
-});
-
 window.onload = () => {
   displayTask();
-  saveTasks();
 };

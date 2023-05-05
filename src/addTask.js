@@ -1,11 +1,11 @@
-const addTask = (tasks, taskName, existingTask) => {
+const addTask = (tasks, taskName, existingTaskId) => {
   if (!taskName) {
     return tasks;
   }
 
-  if (existingTask) {
+  if (existingTaskId) {
     const taskIndex = tasks.findIndex(
-      (task) => task.id === parseInt(existingTask, 10),
+      (task) => task.id === parseInt(existingTaskId, 10),
     );
     tasks[taskIndex].name = taskName;
   } else {
