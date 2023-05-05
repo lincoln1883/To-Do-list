@@ -13,15 +13,17 @@
 			</div>
 
 			<div class="todo-container">
-				<input
-					class="todo-input"
-					type="text"
-					name="todo"
-					id="todo-input"
-					placeholder="Add to your list..."
-					required />
+				<form id="input-form" action="">
+					<input
+						class="todo-input"
+						type="text"
+						id="todo-input"
+						placeholder="Add to your list..."
+						required />
+					<button class="submit-btn" type="submit"></button>
+				</form>
 				<ul class="todo-list"></ul>
-				<button type="button">Clear all completed</button>
+				<button type="button" class="delete-btn">Clear all completed</button>
 			</div>
 		</main>
 	</body>

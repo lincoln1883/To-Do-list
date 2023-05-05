@@ -2,36 +2,12 @@ import './style.css';
 import dots from './assets/dots.svg';
 import fresh from './assets/refresh.svg';
 import returnIcon from './assets/return.svg';
+import trash from './assets/trash.svg';
+import addTask from './addTask.js';
+import removeTask from './removeTask.js';
+import editTask from './editTask.js';
 
-// Create a function to display the task list
-
-const task = [
-  {
-    id: 1,
-    name: 'Learn React',
-    completed: false,
-  },
-  {
-    id: 2,
-    name: 'Learn Node',
-    completed: false,
-  },
-  {
-    id: 3,
-    name: 'Learn SQL',
-    completed: false,
-  },
-  {
-    id: 4,
-    name: 'Learn Express',
-    completed: true,
-  },
-  {
-    id: 5,
-    name: 'Mongo DB',
-    completed: true,
-  },
-];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 const todoList = document.querySelector('.todo-list');
 const textContainer = document.querySelector('.todo-text__container');
@@ -40,35 +16,94 @@ image.classList.add('refresh-icon');
 image.setAttribute('src', fresh);
 textContainer.appendChild(image);
 
-const todoContainer = document.querySelector('.todo-container');
+const form = document.querySelector('#input-form');
+const taskInput = document.querySelector('#todo-input');
+const submitBtn = document.querySelector('.submit-btn');
+
 const returnImg = document.createElement('img');
 returnImg.classList.add('return-icon');
 returnImg.setAttribute('src', returnIcon);
-todoContainer.appendChild(returnImg);
+submitBtn.appendChild(returnImg);
+
+// function for displaying the list of tasks
+const saveTasks = () => {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+};
 
 const displayTask = () => {
   todoList.innerHTML = '';
-  task.sort((a, b) => a.id - b.id);
+  if (!tasks) {
+    tasks = [];
+  }
 
-  task.forEach((task) => {
+  tasks.forEach((task, index) => {
+    task.index = index + 1;
+
     const taskItem = document.createElement('li');
-    const div = document.createElement('div');
-    div.classList.add('task');
-    const input = document.createElement('input');
-    input.setAttribute('type', 'checkbox');
-    input.checked = task.completed;
-    const icon = document.createElement('img');
-    icon.classList.add('option-icon');
-    icon.setAttribute('src', dots);
-    const span = document.createElement('span');
-    span.innerText = task.name;
-    div.appendChild(input);
-    div.appendChild(span);
-    div.appendChild(icon);
-    taskItem.appendChild(div);
+    taskItem.innerHTML = `
+    <div class="task">
+      <input type="checkbox" id="task-${task.index}" ${
+  task.completed ? 'checked' : ''
+}>
+      <label class="task-label" for="task-${task.index}">${task.name}</label>
+      <img class="option-icon" src=${dots}>
+      </div>
+      `;
     todoList.appendChild(taskItem);
+
+    const taskLabel = taskItem.querySelector('.task-label');
+    taskLabel.addEventListener('click', () => {
+      task.completed = !task.completed;
+      saveTasks();
+      displayTask();
+    });
+    const taskDots = taskItem.querySelector('.option-icon');
+    taskDots.addEventListener('click', () => {
+      const taskId = task.index;
+      const taskIndex = tasks.findIndex((task) => task.index === taskId);
+
+      const newInput = document.createElement('input');
+      newInput.classList.add('edit-input');
+      newInput.setAttribute('type', 'text');
+      newInput.value = tasks[taskIndex].name;
+
+      const trashIcon = document.createElement('img');
+      trashIcon.classList.add('trash-icon');
+      trashIcon.setAttribute('src', trash);
+
+      taskLabel.replaceWith(newInput);
+      taskDots.replaceWith(trashIcon);
+
+      newInput.focus();
+
+      newInput.addEventListener('change', () => {
+        const taskName = newInput.value;
+        tasks = editTask(tasks, taskId, taskName);
+        saveTasks();
+        displayTask();
+      });
+
+      trashIcon.addEventListener('click', () => {
+        removeTask(taskId, tasks);
+        saveTasks();
+        displayTask();
+      });
+    });
   });
 };
+
+form.addEventListener('submit', addTask);
+
+submitBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const taskName = taskInput.value;
+  const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
+  tasks = addTask(tasks, taskName, existingTaskId);
+  displayTask();
+  saveTasks();
+  taskInput.value = '';
+  taskInput.dataset.taskId = '';
+});
 
 window.onload = () => {
   displayTask();
