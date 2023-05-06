@@ -6,6 +6,7 @@ import trash from './assets/trash.svg';
 import addTask from './addTask.js';
 import removeTask from './removeTask.js';
 import editTask from './editTask.js';
+import completedTask from './checkedComplete.js';
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
@@ -25,6 +26,8 @@ returnImg.classList.add('return-icon');
 returnImg.setAttribute('src', returnIcon);
 submitBtn.appendChild(returnImg);
 
+const deleteBtn = document.querySelector('.delete-btn');
+
 // function for displaying the list of tasks
 const saveTasks = () => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -42,15 +45,25 @@ const displayTask = () => {
     const taskItem = document.createElement('li');
     taskItem.innerHTML = `
     <div class="task">
-      <input type="checkbox" id="task-${task.index}" ${
-  task.completed ? 'checked' : ''
-}>
+      <input type="checkbox" class="checkbox" data-task-id="task-${
+  task.index
+}" ${task.completed ? 'checked' : ''}>
       <label class="task-label" for="task-${task.index}">${task.name}</label>
       <img class="option-icon" src=${dots}>
       </div>
       `;
     todoList.appendChild(taskItem);
 
+    const checkbox = taskItem.querySelector(
+      `[data-task-id="task-${task.index}"]`,
+    );
+    if (checkbox) {
+      checkbox.addEventListener('click', () => {
+        task.completed = checkbox.checked;
+        saveTasks();
+        displayTask();
+      });
+    }
     const taskLabel = taskItem.querySelector('.task-label');
     taskLabel.addEventListener('click', () => {
       task.completed = !task.completed;
@@ -103,6 +116,12 @@ submitBtn.addEventListener('click', (e) => {
   saveTasks();
   taskInput.value = '';
   taskInput.dataset.taskId = '';
+});
+
+deleteBtn.addEventListener('click', () => {
+  tasks = completedTask(tasks);
+  saveTasks();
+  displayTask();
 });
 
 window.onload = () => {
