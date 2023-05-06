@@ -116,3 +116,12 @@ button {
   color: #fff;
   cursor: pointer;
 }
+
+.task-label.completed {
+  text-decoration: line-through;
+  color: #ccc;
+}
+
+.disabled {
+  cursor: not-allowed;
+}
