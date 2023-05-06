@@ -80,7 +80,7 @@ The todo list app is a project assignment of module two where we are required to
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 
-- Coming soon
+[Live Demo Link](https://lincoln1883.github.io/To-Do-list/) :point_left:
 
 <!-- GETTING STARTED -->
 
