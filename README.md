@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <h3><b>TODO LIST APP</b></b></h3>
+  <h3><b>🛠 TODO LIST APP</b></b></h3>
 
 </div>
 
@@ -31,7 +31,7 @@
 
 # 📖 Todo List App <a name="about-project"></a>
 
-The todo list app is a project assignment of module two where we are required to use a webpack for bundling and our app which is build using html, css and javascript.
+The todo list app is a project assignment of module two where we are required to use a webpack for bundling and our app which is build using html, css and javascript. It is a simple todo list app where you can add, delete ,edit and mark your todos as complete which in fact the first introduction to CRUD.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -69,9 +69,10 @@ The todo list app is a project assignment of module two where we are required to
 ### Key Features <a name="key-features"></a>
 
 - Webpack bundling
-- Added index.html file
-- Added style.css file
-- Added linters
+- Minimalistic Index.html
+- Styling with Vanilla CSS
+- Linting with Eslint, Stylelint and Webhint.
+- CRUD functionality with Javascript.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -123,7 +124,23 @@ open the index.html file in your browser using the live server extension.
 
 ### Run tests
 
-> Coming soon
+To test JavaScript:
+
+```sh
+    run `npx eslint .`
+```
+
+To test HTML:
+
+```sh
+    run `npx hint .`
+```
+
+To test CSS:
+
+```sh
+    run `npx stylelint "**/*.{css,scss}" `
+```
 
 ### Deployment
 
@@ -147,10 +164,7 @@ open the index.html file in your browser using the live server extension.
 
 ## 🔭 Future Features <a name="future-features"></a>
 
-- Add more tests
-- Add more features
-- Add more styling
-- Add more functionality
+- Testing with Jest
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
