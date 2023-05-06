@@ -30,100 +30,105 @@ const deleteBtn = document.querySelector('.delete-btn');
 
 // function for displaying the list of tasks
 const saveTasks = () => {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+	localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 const displayTask = () => {
-  todoList.innerHTML = '';
-  if (!tasks) {
-    tasks = [];
-  }
+	todoList.innerHTML = '';
 
-  tasks.forEach((task, index) => {
-    task.index = index + 1;
+	tasks.forEach((task, index) => {
+		task.index = index + 1;
 
-    const taskItem = document.createElement('li');
-    taskItem.innerHTML = `
+		const taskItem = document.createElement('li');
+		taskItem.innerHTML = `
     <div class="task">
       <input type="checkbox" class="checkbox" data-task-id="task-${
-  task.index
-}" ${task.completed ? 'checked' : ''}>
-      <label class="task-label" for="task-${task.index}">${task.name}</label>
+				task.index
+			}" ${task.completed ? 'checked' : ''}>
+      <span class="task-label" for="task-${task.index}">${task.name}</span>
       <img class="option-icon" src=${dots}>
       </div>
       `;
-    todoList.appendChild(taskItem);
+		todoList.appendChild(taskItem);
 
-    const checkbox = taskItem.querySelector(
-      `[data-task-id="task-${task.index}"]`,
-    );
-    if (checkbox) {
-      checkbox.addEventListener('click', () => {
-        task.completed = checkbox.checked;
-        saveTasks();
-        displayTask();
-      });
-    }
-    const taskLabel = taskItem.querySelector('.task-label');
-    taskLabel.addEventListener('click', () => {
-      task.completed = !task.completed;
-      saveTasks();
-      displayTask();
-    });
-    const taskDots = taskItem.querySelector('.option-icon');
-    taskDots.addEventListener('click', () => {
-      const taskId = task.index;
-      const taskIndex = tasks.findIndex((task) => task.index === taskId);
+		const taskLabel = taskItem.querySelector('.task-label');
 
-      const newInput = document.createElement('input');
-      newInput.classList.add('edit-input');
-      newInput.setAttribute('type', 'text');
-      newInput.value = tasks[taskIndex].name;
+		const checkbox = taskItem.querySelector(
+			`[data-task-id="task-${task.index}"]`
+		);
+		if (checkbox) {
+			checkbox.addEventListener('click', (e) => {
+				task.completed = checkbox.checked;
+				if (task.completed) {
+					deleteBtn.classList.remove('disabled');
+				} else {
+					deleteBtn.classList.add('disabled');
+				}
+				saveTasks();
+				displayTask();
+			});
+		}
 
-      const trashIcon = document.createElement('img');
-      trashIcon.classList.add('trash-icon');
-      trashIcon.setAttribute('src', trash);
+		const taskDots = taskItem.querySelector('.option-icon');
+		taskDots.addEventListener('click', () => {
+			const taskId = task.index;
+			const taskIndex = tasks.findIndex((task) => task.index === taskId);
 
-      taskLabel.replaceWith(newInput);
-      taskDots.replaceWith(trashIcon);
+			const newInput = document.createElement('input');
+			newInput.classList.add('edit-input');
+			newInput.setAttribute('type', 'text');
+			newInput.value = tasks[taskIndex].name;
 
-      newInput.focus();
+			const trashIcon = document.createElement('img');
+			trashIcon.classList.add('trash-icon');
+			trashIcon.setAttribute('src', trash);
 
-      newInput.addEventListener('change', () => {
-        const taskName = newInput.value;
-        tasks = editTask(tasks, taskId, taskName);
-        saveTasks();
-        displayTask();
-      });
+			taskLabel.replaceWith(newInput);
+			taskDots.replaceWith(trashIcon);
 
-      trashIcon.addEventListener('click', () => {
-        removeTask(taskId, tasks);
-        saveTasks();
-        displayTask();
-      });
-    });
-  });
+			newInput.focus();
+
+			newInput.addEventListener('change', () => {
+				const taskName = newInput.value;
+				tasks = editTask(tasks, taskId, taskName);
+				saveTasks();
+				displayTask();
+			});
+
+			trashIcon.addEventListener('click', () => {
+				removeTask(taskId, tasks);
+				saveTasks();
+				displayTask();
+			});
+		});
+	});
 };
 
 form.addEventListener('submit', addTask);
 
 submitBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  const taskName = taskInput.value;
-  const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
-  tasks = addTask(tasks, taskName, existingTaskId);
-  displayTask();
-  saveTasks();
-  taskInput.value = '';
-  taskInput.dataset.taskId = '';
+	e.preventDefault();
+	const taskName = taskInput.value;
+	const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
+	tasks = addTask(tasks, taskName, existingTaskId);
+	displayTask();
+	saveTasks();
+	taskInput.value = '';
+	taskInput.dataset.taskId = '';
 });
 
 deleteBtn.addEventListener('click', () => {
-  tasks = completedTask(tasks);
-  saveTasks();
-  displayTask();
+	tasks = completedTask(tasks);
+	saveTasks();
+	displayTask();
+});
+
+image.addEventListener('click', (e) => {
+	e.target.classList.toggle('rotate');
+	saveTasks();
+	displayTask();
 });
 
 window.onload = () => {
-  displayTask();
+	displayTask();
 };
