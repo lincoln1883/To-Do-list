@@ -35,9 +35,6 @@ const saveTasks = () => {
 
 const displayTask = () => {
   todoList.innerHTML = '';
-  if (!tasks) {
-    tasks = [];
-  }
 
   tasks.forEach((task, index) => {
     task.index = index + 1;
@@ -48,11 +45,13 @@ const displayTask = () => {
       <input type="checkbox" class="checkbox" data-task-id="task-${
   task.index
 }" ${task.completed ? 'checked' : ''}>
-      <label class="task-label" for="task-${task.index}">${task.name}</label>
+      <span class="task-label" for="task-${task.index}">${task.name}</span>
       <img class="option-icon" src=${dots}>
       </div>
       `;
     todoList.appendChild(taskItem);
+
+    const taskLabel = taskItem.querySelector('.task-label');
 
     const checkbox = taskItem.querySelector(
       `[data-task-id="task-${task.index}"]`,
@@ -60,16 +59,16 @@ const displayTask = () => {
     if (checkbox) {
       checkbox.addEventListener('click', () => {
         task.completed = checkbox.checked;
+        if (task.completed) {
+          deleteBtn.classList.remove('disabled');
+        } else {
+          deleteBtn.classList.add('disabled');
+        }
         saveTasks();
         displayTask();
       });
     }
-    const taskLabel = taskItem.querySelector('.task-label');
-    taskLabel.addEventListener('click', () => {
-      task.completed = !task.completed;
-      saveTasks();
-      displayTask();
-    });
+
     const taskDots = taskItem.querySelector('.option-icon');
     taskDots.addEventListener('click', () => {
       const taskId = task.index;
@@ -120,6 +119,12 @@ submitBtn.addEventListener('click', (e) => {
 
 deleteBtn.addEventListener('click', () => {
   tasks = completedTask(tasks);
+  saveTasks();
+  displayTask();
+});
+
+image.addEventListener('click', (e) => {
+  e.target.classList.toggle('rotate');
   saveTasks();
   displayTask();
 });
