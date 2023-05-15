@@ -27,128 +27,128 @@ submitBtn.appendChild(returnImg);
 
 const deleteBtn = document.querySelector('.delete-btn');
 
-//function for saving the tasks
+// function for saving the tasks
 const saveTasks = () => {
-	localStorage.setItem('tasks', JSON.stringify(tasks));
-};
-
-// function for displaying the list of tasks
-const displayTask = () => {
-	todoList.innerHTML = '';
-
-	tasks.sort((a, b) => a.index - b.index);
-	tasks.forEach((task) => {
-		const taskItem = createTaskItem(task);
-		todoList.appendChild(taskItem);
-
-		const checkbox = taskItem.querySelector('.checkbox');
-		const taskLabel = taskItem.querySelector('.task-label');
-
-		if (checkbox) {
-			checkbox.addEventListener('click', () => {
-				task.completed = checkbox.checked;
-				deleteBtn.classList.toggle('disabled', !task.completed);
-				saveTasks();
-				displayTask();
-			});
-		}
-
-		const taskDots = taskItem.querySelector('.option-icon');
-		taskDots.addEventListener('click', (e) => {
-			e.target.parentNode.style.backgroundColor = 'bisque';
-			const taskId = task.index;
-			const taskIndex = tasks.findIndex((task) => task.index === taskId);
-
-			const newInput = createEditInput(tasks[taskIndex].name);
-			const trashIcon = createTrashIcon();
-
-			taskLabel.replaceWith(newInput);
-			taskDots.replaceWith(trashIcon);
-
-			newInput.focus();
-
-			newInput.addEventListener('change', () => {
-				const taskName = newInput.value;
-				tasks = editTask(tasks, taskId, taskName);
-				saveTasks();
-				displayTask();
-			});
-
-			trashIcon.addEventListener('click', () => {
-				removeTask(taskId, tasks);
-				saveTasks();
-				displayTask();
-			});
-		});
-	});
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 // function for adding a task
 const createTaskItem = (task) => {
-	const taskItem = document.createElement('li');
-	taskItem.innerHTML = `
+  const taskItem = document.createElement('li');
+  taskItem.innerHTML = `
     <div class="task">
       <input type="checkbox" class="checkbox" data-task-id="${task.index}" ${
-		task.completed ? 'checked' : ''
-	}>
+  task.completed ? 'checked' : ''
+}>
       <span class="task-label ${task.completed ? 'checked' : ''}"  for="task-${
-		task.index
-	}">${task.name}</span>
+  task.index
+}">${task.name}</span>
       <img class="option-icon" src=${dots}>
     </div>
   `;
-	return taskItem;
+  return taskItem;
 };
 
 // function for creating the edit input
 const createEditInput = (value) => {
-	const newInput = document.createElement('input');
-	newInput.classList.add('edit-input');
-	newInput.setAttribute('type', 'text');
-	newInput.value = value;
-	return newInput;
+  const newInput = document.createElement('input');
+  newInput.classList.add('edit-input');
+  newInput.setAttribute('type', 'text');
+  newInput.value = value;
+  return newInput;
 };
 
 // function for creating the trash icon
 const createTrashIcon = () => {
-	const trashIcon = document.createElement('img');
-	trashIcon.classList.add('trash-icon');
-	trashIcon.setAttribute('src', trash);
-	return trashIcon;
+  const trashIcon = document.createElement('img');
+  trashIcon.classList.add('trash-icon');
+  trashIcon.setAttribute('src', trash);
+  return trashIcon;
+};
+
+// function for displaying the list of tasks
+const displayTask = () => {
+  todoList.innerHTML = '';
+
+  tasks.sort((a, b) => a.index - b.index);
+  tasks.forEach((task) => {
+    const taskItem = createTaskItem(task);
+    todoList.appendChild(taskItem);
+
+    const checkbox = taskItem.querySelector('.checkbox');
+    const taskLabel = taskItem.querySelector('.task-label');
+
+    if (checkbox) {
+      checkbox.addEventListener('click', () => {
+        task.completed = checkbox.checked;
+        deleteBtn.classList.toggle('disabled', !task.completed);
+        saveTasks();
+        displayTask();
+      });
+    }
+
+    const taskDots = taskItem.querySelector('.option-icon');
+    taskDots.addEventListener('click', (e) => {
+      e.target.parentNode.style.backgroundColor = 'bisque';
+      const taskId = task.index;
+      const taskIndex = tasks.findIndex((task) => task.index === taskId);
+
+      const newInput = createEditInput(tasks[taskIndex].name);
+      const trashIcon = createTrashIcon();
+
+      taskLabel.replaceWith(newInput);
+      taskDots.replaceWith(trashIcon);
+
+      newInput.focus();
+
+      newInput.addEventListener('change', () => {
+        const taskName = newInput.value;
+        tasks = editTask(tasks, taskId, taskName);
+        saveTasks();
+        displayTask();
+      });
+
+      trashIcon.addEventListener('click', () => {
+        removeTask(taskId, tasks);
+        saveTasks();
+        displayTask();
+      });
+    });
+  });
 };
 
 form.addEventListener('submit', addTask);
 
 // function for adding the tasks
 submitBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	const taskName = taskInput.value;
-	const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
-	tasks = addTask(tasks, taskName, existingTaskId);
-	displayTask();
-	saveTasks();
-	taskInput.value = '';
-	taskInput.dataset.taskId = '';
+  e.preventDefault();
+  const taskName = taskInput.value;
+  const existingTaskId = parseInt(taskInput.dataset.taskId, 10) || null;
+  tasks = addTask(tasks, taskName, existingTaskId);
+  displayTask();
+  saveTasks();
+  taskInput.value = '';
+  taskInput.dataset.taskId = '';
 });
 
 // function for deleting the tasks
 deleteBtn.addEventListener('click', () => {
-	const completedTasks = tasks.filter((task) => task.completed === true);
-	if (completedTasks.length > 0) {
-		completedTasks.forEach((task) => {
-			tasks = removeTask(task.index, tasks);
-		});
-		saveTasks();
-		displayTask();
-	}
+  const completedTasks = tasks.filter((task) => task.completed === true);
+  if (completedTasks.length > 0) {
+    completedTasks.forEach((task) => {
+      tasks = removeTask(task.index, tasks);
+    });
+    saveTasks();
+    displayTask();
+  }
 });
 
 image.addEventListener('click', (e) => {
-	e.target.classList.toggle('rotate');
-	saveTasks();
-	displayTask();
+  e.target.classList.toggle('rotate');
+  saveTasks();
+  displayTask();
 });
 
 window.onload = () => {
-	displayTask();
+  displayTask();
 };
