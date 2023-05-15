@@ -1,12 +1,7 @@
 const addTask = (tasks, taskName, existingTaskId) => {
-  if (!taskName) {
-    return tasks;
-  }
-
+  if (!taskName) return tasks;
   if (existingTaskId) {
-    const taskIndex = tasks.findIndex(
-      (task) => task.index === parseInt(existingTaskId, 10),
-    );
+    const taskIndex = tasks.findIndex((task) => task.index === existingTaskId);
     tasks[taskIndex].name = taskName;
   } else {
     const newTask = {
@@ -16,7 +11,6 @@ const addTask = (tasks, taskName, existingTaskId) => {
     };
     tasks.push(newTask);
   }
-
   return tasks;
 };
 

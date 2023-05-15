@@ -117,8 +117,9 @@ button {
   cursor: pointer;
 }
 
-.completed {
-  background-color: black;
+.checked {
+  text-decoration: line-through;
+  color: lightgrey;
 }
 
 .rotate {
@@ -128,4 +129,10 @@ button {
 
 .disabled {
   cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    width: 90%;
+  }
 }
